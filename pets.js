@@ -36,7 +36,7 @@ if (!validCommands.includes(cmd)) {
       console.log(pets);
     }
   });
-} else if (cmd = 'create') {
+} else if (cmd === 'create') {
   let age = process.argv[3] * 1; // convert to number
   let kind = process.argv[4];
   let name = process.argv[5];
@@ -55,6 +55,30 @@ if (!validCommands.includes(cmd)) {
     });
   } else {
     console.error(`Usage: ${node} ${file} ${cmd} AGE KIND NAME`);
+    process.exitCode = 1;
+  }
+} else if (cmd === 'update') {
+  let index = process.argv[3] * 1;
+  let age = process.argv[4] * 1; // convert to number
+  let kind = process.argv[5];
+  let name = process.argv[6];
+  if (!Number.isNaN(index) && !Number.isNaN(age) && kind && name) {
+    readDatabase(db, pets => {
+      if (index >= 0 && index < pets.length) {
+        let updatePet = {
+          age: age,
+          kind: kind,
+          name: name
+        }
+        pets[index] = updatePet;
+        fs.writeFile(db, JSON.stringify(pets), (err) => {
+          if (err) throw err;
+          console.log(updatePet);
+        })
+      }
+    });
+  } else {
+    console.error(`Usage: ${node} ${file} ${cmd} INDEX AGE KIND NAME`);
     process.exitCode = 1;
   }
 }
