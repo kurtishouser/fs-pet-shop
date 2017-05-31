@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 'use strict';
 
 const fs = require('fs');
@@ -79,6 +81,22 @@ if (!validCommands.includes(cmd)) {
     });
   } else {
     console.error(`Usage: ${node} ${file} ${cmd} INDEX AGE KIND NAME`);
+    process.exitCode = 1;
+  }
+} else if (cmd === 'destroy') {
+  let index = process.argv[3];
+  if (index) {
+    readDatabase(db, pets => {
+      if (index >= 0 && index < pets.length) {
+        let destroyPet = pets.splice(index, 1);
+        fs.writeFile(db, JSON.stringify(pets), (err) => {
+          if (err) throw err;
+        })
+        console.log(destroyPet[0]);
+      }
+    });
+  } else {
+    console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
     process.exitCode = 1;
   }
 }
