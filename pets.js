@@ -7,7 +7,7 @@ const path = require('path');
 const db = path.join(__dirname, 'pets.json');
 
 
-const validCommands = ['create', 'read', 'update', 'destroy'];
+const validCommands = ['read', 'create', 'update', 'destroy'];
 
 let node = path.basename(process.argv[0]);
 let file = path.basename(process.argv[1]);
@@ -22,7 +22,7 @@ function readDatabase(db, callback) {
 }
 
 if (!validCommands.includes(cmd)) {
-  console.error(`Usage: ${node} ${file} [read | create | update | destroy]`);
+  console.error(`Usage: ${node} ${file} [${validCommands.join(' | ')}]`);
   process.exitCode = 1;
 } else if (cmd === 'read') {
   readDatabase(db, pets => {
