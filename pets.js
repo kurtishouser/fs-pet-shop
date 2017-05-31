@@ -4,24 +4,31 @@ const fs = require('fs');
 const path = require('path');
 const db = path.join(__dirname, 'pets.json');
 
+
 const validCommands = ['create', 'read', 'update', 'destroy'];
 
 let node = path.basename(process.argv[0]);
 let file = path.basename(process.argv[1]);
 let cmd = process.argv[2];
 
+function readDatabase(db, callback) {
+  fs.readFile(db, (err, data) => {
+    if (err) throw err;
+    let pets = JSON.parse(data);
+    callback(pets);
+  });
+}
+
 if (!validCommands.includes(cmd)) {
   console.error(`Usage: ${node} ${file} [read | create | update | destroy]`);
   process.exitCode = 1;
 } else if (cmd === 'read') {
-  fs.readFile(db, (err, data) => {
-    if (err) throw err;
-    let pets = JSON.parse(data);
+  readDatabase(db, pets => {
     let readIndex = process.argv[3]; // may be undefined
     if (readIndex) {
       if (readIndex >= 0 && readIndex < pets.length) {
         console.log(pets[readIndex]);
-      } else {
+    } else {
         console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
         process.exitCode = 1;
       }
@@ -34,9 +41,7 @@ if (!validCommands.includes(cmd)) {
   let kind = process.argv[4];
   let name = process.argv[5];
   if (!Number.isNaN(age) && kind && name) {
-    fs.readFile(db, (err, data) => {
-      if (err) throw err;
-      let pets = JSON.parse(data);
+    readDatabase(db, pets => {
       let newPet = {
         age: age,
         kind: kind,
