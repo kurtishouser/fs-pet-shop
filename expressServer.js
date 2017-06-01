@@ -58,7 +58,6 @@ app.post('/pets', (req, res) => {
           console.error(err.stack);
           res.sendStatus(500);
         }
-        // res.set('Content-Type', 'application/json');
         res.json(newPet);
       });
     });
@@ -91,7 +90,7 @@ app.get('/*', (req, res) => {
   res.status(404).send('Not Found');
 })
 
-app.listen(8000, () => {
+app.listen(port, () => {
   console.log('listening on port', port);
 })
 
