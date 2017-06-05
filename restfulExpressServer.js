@@ -97,9 +97,7 @@ app.patch('/pets/:index', (req, res) => {
   let petObj = {};
 
   if (age) {
-    // console.log('age provided');
     if (Number.isNaN(age)) {
-      console.log('invalid age');
       return res.sendStatus(400);
     }
     petObj.age = age;
