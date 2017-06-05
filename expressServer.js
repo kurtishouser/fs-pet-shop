@@ -19,7 +19,7 @@ app.get('/pets', (req, res) => {
   fs.readFile(dbFile, (err, data) => {
     if (err) {
       console.error(err.stack);
-      res.sendStatus(500);
+      return res.sendStatus(500);
     }
 
     let pets = JSON.parse(data);
@@ -35,14 +35,13 @@ app.post('/pets', (req, res) => {
   let name = req.body.name;
 
   if (Number.isNaN(age) || !kind || !name) {
-    res.set('Content-Type', 'text/plain');
-    res.status(400).send('Bad Request');
+    return res.sendStatus(400);
   } else {
     fs.readFile(dbFile, (err, data) => {
 
       if (err) {
         console.error(err.stack);
-        res.sendStatus(500);
+        return res.sendStatus(500);
       }
 
       let pets = JSON.parse(data);
@@ -56,7 +55,7 @@ app.post('/pets', (req, res) => {
       fs.writeFile(dbFile, JSON.stringify(pets), (err) => {
         if (err) {
           console.error(err.stack);
-          res.sendStatus(500);
+          return res.sendStatus(500);
         }
         res.json(newPet);
       });
@@ -69,15 +68,14 @@ app.get('/pets/:index', (req, res) => {
   fs.readFile(dbFile, (err, data) => {
     if (err) {
       console.error(err.stack);
-      res.sendStatus(500);
+      return res.sendStatus(500);
     }
 
     let pets = JSON.parse(data);
     let index = Number.parseInt(req.params.index);
 
     if (index < 0 || index >= pets.length || Number.isNaN(index)) {
-      res.set('Content-Type', 'text/plain')
-      res.status(404).send('Not Found');
+      return res.sendStatus(404);
     }
 
     res.json(pets[index]);
@@ -86,8 +84,7 @@ app.get('/pets/:index', (req, res) => {
 
 
 app.get('/*', (req, res) => {
-  res.set('Content-Type', 'text/plain');
-  res.status(404).send('Not Found');
+  return res.sendStatus(404);
 })
 
 
